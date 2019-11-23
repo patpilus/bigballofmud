@@ -25,6 +25,10 @@ public interface HoldDuration {
     default boolean isCloseEnded() {
         return getDays().isPresent();
     }
+
+    default boolean isOpenEnded() {
+        return !getDays().isPresent();
+    }
 }
 
 @Value

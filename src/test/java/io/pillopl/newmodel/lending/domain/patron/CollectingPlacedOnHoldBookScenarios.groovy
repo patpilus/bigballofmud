@@ -17,7 +17,14 @@ class CollectingPlacedOnHoldBookScenarios extends Specification {
      * Remember that Fixtures, for instance aRegularPatron() should be changed so that it returns a regular patron in the meaning of your new model.
      */
     def 'can collect an existing hold'() {
-
+        given:
+            Patron patron = aRegularPatron()
+        and:
+            AvailableBook book = circulatingBook()
+        when:
+            Optional<BookCollected> event = patron.collect(book.bookId, forOneMonth())
+        then:
+            event.isPresent()
     }
 
     def 'cannot collect when book is not on hold'() {

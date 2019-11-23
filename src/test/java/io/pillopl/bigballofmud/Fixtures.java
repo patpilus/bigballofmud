@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import static io.pillopl.bigballofmud.entities.BookEntity.BookLendingState.Available;
 import static io.pillopl.bigballofmud.entities.BookEntity.BookState.InLending;
 import static io.pillopl.bigballofmud.entities.BookEntity.BookType.Circulating;
+import static io.pillopl.bigballofmud.entities.BookEntity.BookType.Restricted;
 
 @Component
 class Fixtures {
@@ -53,4 +54,16 @@ class Fixtures {
     }
 
 
+    public BookEntity aRestrictedBookAvailableForLending() {
+        BookEntity book = new BookEntity();
+        book.setIsbn("0198526636");
+        book.setAuthor("author");
+        book.setTitle("title");
+        book.setState(InLending);
+        book.setLendingState(Available);
+        book.setType(Restricted);
+        book.setLendingCostPerDay(BigDecimal.ZERO);
+        book = bookRepository.save(book);
+        return book;
+    }
 }
