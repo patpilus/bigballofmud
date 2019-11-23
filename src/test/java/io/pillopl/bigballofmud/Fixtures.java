@@ -4,6 +4,11 @@ import io.pillopl.bigballofmud.entities.BookEntity;
 import io.pillopl.bigballofmud.entities.BookHolderEntity;
 import io.pillopl.bigballofmud.repositories.BookHolderRepository;
 import io.pillopl.bigballofmud.repositories.BookRepository;
+import io.pillopl.newmodel.catalogue.BookId;
+import io.pillopl.newmodel.lending.domain.book.Book;
+import io.pillopl.newmodel.lending.domain.book.BookType;
+import io.pillopl.newmodel.lending.domain.patron.PatronRepository;
+import io.pillopl.newmodel.lending.domain.patron.PatronType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +28,22 @@ class Fixtures {
     @Autowired
     BookHolderRepository bookHolderRepository;
 
+    @Autowired
+    PatronRepository patronRepository;
+
+    @Autowired
+    io.pillopl.newmodel.lending.domain.book.BookRepository newBookRepository;
+
     BookHolderEntity aPatron(BookHolderEntity.HolderType type) {
         BookHolderEntity holder = new BookHolderEntity();
         holder.setType(type);
         holder.setHolderName("name");
         holder = bookHolderRepository.save(holder);
+//        patronRepository.save(new Patron(
+//                PatronType.Regular,
+//                holder.getId(),
+//                new Holds(holder.getBooks())
+//        ));
         return holder;
     }
 
@@ -50,6 +66,11 @@ class Fixtures {
         book.setType(Circulating);
         book.setLendingCostPerDay(BigDecimal.ZERO);
         book = bookRepository.save(book);
+        newBookRepository.save(new Book(
+                new BookId(book.getId()),
+                BookType.Circulating,
+                Book.State.Available
+        ));
         return book;
     }
 
@@ -63,6 +84,11 @@ class Fixtures {
         book.setType(Restricted);
         book.setLendingCostPerDay(BigDecimal.ZERO);
         book = bookRepository.save(book);
+        newBookRepository.save(new Book(
+                new BookId(book.getId()),
+                BookType.Restricted,
+                Book.State.Available
+        ));
         return book;
     }
 
