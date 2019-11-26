@@ -24,7 +24,31 @@ public class Patron {
     @NonNull @Getter
     final PatronId patronId;
 
+    @Getter
+    final PatronType patronType;
+
+    @Getter
+    private int overdueBooks;
+
+    Patron(@NonNull PatronId patronId, PatronType patronType) {
+        this.patronId = patronId;
+        this.patronType = patronType;
+        this.overdueBooks = 0;
+    }
+
     public Optional<BookPlacedOnHold> placeOnHold(AvailableBook book, HoldDuration holdDuration) {
+        if (isRegular() && book.isCirculating() && holdDuration.isCloseEnded()) {
+            return publishOnHoldEvent(book.getBookId(), patronId, holdDuration.getDays().get());
+        }
+
+        if (isResearcher() && !holdDuration.isCloseEnded()) {
+            return publishOnHoldEvent(book.getBookId(), patronId, null);
+        }
+
+        if (isResearcher() && book.isRestricted()) {
+            return publishOnHoldEvent(book.getBookId(), patronId, holdDuration.getDays().get());
+        }
+
        return Optional.empty();
     }
 
@@ -32,6 +56,15 @@ public class Patron {
         return Optional.empty();
     }
 
+    private Optional<BookPlacedOnHold> publishOnHoldEvent(BookId bookId, PatronId patronId, Integer forDays) {
+        return Optional.of(new BookPlacedOnHold(bookId, patronId, forDays));
+    }
 
+    public boolean isRegular() {
+        return patronType.equals(PatronType.Regular);
+    }
 
+    public boolean isResearcher() {
+        return patronType.equals(PatronType.Researcher);
+    }
 }

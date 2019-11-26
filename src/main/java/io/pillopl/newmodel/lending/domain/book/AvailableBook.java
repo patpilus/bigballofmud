@@ -13,5 +13,9 @@ public class AvailableBook {
     public boolean isRestricted() {
         return bookType.equals(BookType.Restricted);
     }
+
+    public boolean isCirculating() {
+        return bookType.equals(BookType.Circulating);
+    }
 }
 

@@ -16,7 +16,7 @@ public class Fixtures {
      *
      */
     public static Patron aRegularPatron() {
-        return new Patron(new PatronId(UUID.randomUUID()));
+        return new Patron(new PatronId(UUID.randomUUID()), PatronType.Regular);
     }
 
     /**
@@ -25,7 +25,7 @@ public class Fixtures {
      *
      */
     public static Patron aResearcherPatron() {
-        return new Patron(new PatronId(UUID.randomUUID()));
+        return new Patron(new PatronId(UUID.randomUUID()), PatronType.Researcher);
     }
 
     /**
@@ -34,7 +34,7 @@ public class Fixtures {
      *
      */
     public static Patron aResearcherPatronWithTwoOverdueBooks() {
-        return new Patron(new PatronId(UUID.randomUUID()));
+        return new Patron(new PatronId(UUID.randomUUID()), PatronType.Researcher, 2);
     }
 
     public static BookId anyBookId() {
