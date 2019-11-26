@@ -33,8 +33,8 @@ public class Fixtures {
      * TODO: Fixture needs to be completed here.
      *
      */
-    public static Patron aResearcherPatronWithTwoOverdueBooks() {
-        return new Patron(new PatronId(UUID.randomUUID()), PatronType.Researcher, 2);
+    public static Patron aResearcherPatronWithOverdueBooks(int overdueBooks) {
+        return new Patron(new PatronId(UUID.randomUUID()), PatronType.Researcher, overdueBooks);
     }
 
     public static BookId anyBookId() {

@@ -40,7 +40,18 @@ class PlacingOnHoldBookScenarios extends Specification {
         given:
             Patron patron = Fixtures.aResearcherPatron()
         and:
-            5.times { patron.placeOnHold(circulatingBook(), forTenDays())}
+            4.times { patron.placeOnHold(circulatingBook(), forTenDays()) }
+        when:
+            Optional<BookPlacedOnHold> event = patron.placeOnHold(circulatingBook(), forTenDays())
+        then:
+            event.isPresent()
+    }
+
+    def 'cannot place on hold more than 5 books'() {
+        given:
+            Patron patron = Fixtures.aResearcherPatron()
+        and:
+            5.times { patron.placeOnHold(circulatingBook(), forTenDays()) }
         when:
             Optional<BookPlacedOnHold> event = patron.placeOnHold(circulatingBook(), forTenDays())
         then:
@@ -49,11 +60,20 @@ class PlacingOnHoldBookScenarios extends Specification {
 
     def 'cannot place on hold when there are 2 overdue collected books'() {
         given:
-            Patron patron = Fixtures.aResearcherPatronWithTwoOverdueBooks()
+            Patron patron = Fixtures.aResearcherPatronWithOverdueBooks(2)
         when:
             Optional<BookPlacedOnHold> event = patron.placeOnHold(circulatingBook(), forTenDays())
         then:
             !event.isPresent()
+    }
+
+    def 'can place on hold when there are less than 2 overdue collected books'() {
+        given:
+            Patron patron = Fixtures.aResearcherPatronWithOverdueBooks(1)
+        when:
+            Optional<BookPlacedOnHold> event = patron.placeOnHold(circulatingBook(), forTenDays())
+        then:
+            event.isPresent()
     }
 
     def 'cannot place open-ended hold if patron is regular'() {
